@@ -8,6 +8,6 @@ COPY . .
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
+EXPOSE 8000
 
-
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
+CMD ["uvicorn", "auth_service.asgi:application", "--host", "0.0.0.0", "--port", "8000"]

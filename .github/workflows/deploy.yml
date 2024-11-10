@@ -1,42 +1,42 @@
-name: Deploy Django Project
+name: Deploy Backend
 
 on:
   push:
     branches:
-      - main
+      - main  # или ваша ветка для деплоя
 
 jobs:
-  deploy:
+  build_and_deploy_backend:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Install SSH Client
-        run: sudo apt-get install openssh-client
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v1
 
-      - name: SSH Deploy
-        uses: appleboy/ssh-action@v0.1.8
+      # Копируем файлы на сервер с использованием SSH (username/password)
+      - name: Copy backend files to the server
+        uses: appleboy/ssh-action@v0.1.5
         with:
-          host: ${{ secrets.VDS_IP }}
+          host: ${{ secrets.VDS_BACKEND_HOST }}
           username: ${{ secrets.VDS_USER }}
-          password: ${{ secrets.VDS_PASSWORD }}
+          password: ${{ secrets.VDS_PASSWORD }}  # Используем password вместо ключа
+          port: 22
+          source: "."
+          target: "/apps"  # Путь на сервере, куда нужно копировать файлы
+
+      # Строим и запускаем Docker контейнеры на сервере
+      - name: Build and deploy Docker containers on VDS
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.VDS_BACKEND_HOST }}
+          username: ${{ secrets.VDS_USER }}
+          password: ${{ secrets.VDS_PASSWORD }}  # Используем password
+          port: 22
           script: |
-
-
-            docker stop auth_service || true
-            docker rm auth_service || true
-
-
-            docker build -t auth_service:latest .
-            docker run -d --name auth_service -p 8000:8000 \
-              -e DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} \
-              -e DB_NAME=${{ secrets.DB_NAME }} \
-              -e DB_USER=${{ secrets.DB_USER }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              -e DB_HOST=${{ secrets.DB_HOST }} \
-              -e DB_PORT=${{ secrets.DB_PORT }} \
-              -e DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }} \
-              -e DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }} \
-              auth_service:latest
+            cd /apps
+            docker-compose down  # Останавливаем старые контейнеры
+            docker-compose build  # Строим новые образы
+            docker-compose up -d  # Запускаем контейнеры в фоновом режиме
