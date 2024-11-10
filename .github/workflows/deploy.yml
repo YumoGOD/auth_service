@@ -31,7 +31,7 @@ jobs:
       - name: Deploy and Run Backend on VDS
         uses: appleboy/ssh-action@v0.1.5
         with:
-          host: ${{ secrets.VDS_BACKEND_HOST }}
+          host: ${{ secrets.VDS_IP }}
           username: ${{ secrets.VDS_USER }}
           password: ${{ secrets.VDS_PASSWORD }}
           port: 22
