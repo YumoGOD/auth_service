@@ -5,4 +5,3 @@ from django.db import models
 class BaseUser(AbstractUser):
     def __str__(self):
         return self.username
-
