@@ -28,17 +28,16 @@ jobs:
           target: "/apps"  # Путь на сервере, куда нужно копировать файлы
 
       # Строим и запускаем Docker контейнеры на сервере
-      - name: Deploy application to server
+      - name: Deploy and Run Backend on VDS
         uses: appleboy/ssh-action@v0.1.5
         with:
-          host: ${{ secrets.VDS_IP }}
+          host: ${{ secrets.VDS_BACKEND_HOST }}
           username: ${{ secrets.VDS_USER }}
           password: ${{ secrets.VDS_PASSWORD }}
           port: 22
           script: |
-            mkdir -p /apps
-            rsync -avz --delete ./ /apps
             cd /apps
             docker-compose down
             docker-compose build
             docker-compose up -d
+
