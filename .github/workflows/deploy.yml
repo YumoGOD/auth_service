@@ -23,7 +23,6 @@ jobs:
           username: ${{ secrets.VDS_USER }}
           password: ${{ secrets.VDS_PASSWORD }}
           script: |
-            cd /apps
 
 
             docker stop auth_service || true
