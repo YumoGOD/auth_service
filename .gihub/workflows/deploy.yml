@@ -1,0 +1,43 @@
+name: Deploy Django Project
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install SSH Client
+        run: sudo apt-get install openssh-client
+
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.VDS_IP }}
+          username: ${{ secrets.VDS_USER }}
+          password: ${{ secrets.VDS_PASSWORD }}
+          script: |
+            cd /apps
+
+
+            docker stop auth_service || true
+            docker rm auth_service || true
+
+
+            docker build -t auth_service:latest .
+            docker run -d --name auth_service -p 8000:8000 \
+              -e DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} \
+              -e DB_NAME=${{ secrets.DB_NAME }} \
+              -e DB_USER=${{ secrets.DB_USER }} \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              -e DB_HOST=${{ secrets.DB_HOST }} \
+              -e DB_PORT=${{ secrets.DB_PORT }} \
+              -e DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }} \
+              -e DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }} \
+              auth_service:latest

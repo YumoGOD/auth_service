@@ -1,18 +1,18 @@
 from pathlib import Path
 from datetime import timedelta
-
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x1%axknr4p)ruz%9v3$quv!z*q7yv*=po08hi0$r$n*a33&ykt'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'N8&z4&1nq2cpX0wXqHYr&bPv&JqHQ6nPde18*MwZ$z&mucs86m')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'True')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 
 
 # Application definition
@@ -71,15 +71,14 @@ WSGI_APPLICATION = 'auth_service.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test_auth_tables',
-        'USER': 'auth_admin',
-        'PASSWORD': 'Auth_admin@123',
-        'HOST': '109.172.84.98',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql',  
+        'NAME': os.getenv('DB_NAME', 'test_auth_tables'),
+        'USER': os.getenv('DB_USER', 'auth_admin'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'Auth_admin@123'),
+        'HOST': os.getenv('DB_HOST', '109.172.84.98'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -145,4 +144,4 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,  
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = os.getenv('CORS_ALLOW_ALL_ORIGINS', 'True')
