@@ -18,7 +18,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t auth_service .
+          docker build -t myproject .
 
       - name: Deploy to server
         env:
@@ -31,7 +31,7 @@ jobs:
           DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
         run: |
           sshpass -p ${{ secrets.VDS_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.VDS_USER }}@${{ secrets.VDS_IP }} "
-            cd /root/apps/auth_service &&
+            cd /path/to/your/app &&
             docker-compose down &&
             docker-compose up --build -d
           "
