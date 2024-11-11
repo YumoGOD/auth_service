@@ -31,16 +31,7 @@ jobs:
           DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
         run: |
           sshpass -p ${{ secrets.VDS_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.VDS_USER }}@${{ secrets.VDS_IP }} "
-            echo 'Current directory: $(pwd)' &&
-            ls -la &&
-            # Переход на один уровень вверх
-            cd .. &&
-            echo 'Inside parent directory' &&
-            ls -la &&
-            # Переход в auth_service
-            cd auth_service &&
-            echo 'Inside auth_service directory' &&
-            ls -la &&
+            cd . &&
             docker-compose down &&
             docker-compose up --build -d
           "
