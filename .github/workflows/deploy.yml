@@ -31,7 +31,12 @@ jobs:
           DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
         run: |
           sshpass -p ${{ secrets.VDS_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.VDS_USER }}@${{ secrets.VDS_IP }} "
+            echo 'Current directory: $(pwd)' &&
+            ls -la &&
+            # Убедитесь, что вы находитесь в нужной директории, например, /home/username/
             cd ~/auth_service &&
+            echo 'Inside auth_service directory' &&
+            ls -la &&
             docker-compose down &&
             docker-compose up --build -d
           "
