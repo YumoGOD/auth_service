@@ -1,25 +1,18 @@
-version: '3'
+version: '3.8'
 
 services:
-  backend:
+  django:
     build: .
-    command: uvicorn your_project_name.asgi:application --host 0.0.0.0 --port 8000
-    environment:
-      - DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
-      - DB_NAME=${{ secrets.DB_NAME }}
-      - DB_USER=${{ secrets.DB_USER }}
-      - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-      - DB_HOST=${{ secrets.DB_HOST }}
-      - DB_PORT=${{ secrets.DB_PORT }}
-      - DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}
-      - DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}
-    volumes:
-      - .:/app
+    container_name: django-app
     ports:
       - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
     networks:
-      - backend
+      - app-network
 
 networks:
-  backend:
+  app-network:
     driver: bridge

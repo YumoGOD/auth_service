@@ -1,13 +1,20 @@
+# Используем официальный образ Python как базовый
 FROM python:3.12.3-slim
 
-COPY requirements.txt requirements.txt
+# Устанавливаем рабочую директорию в контейнере
+WORKDIR /app
+
+# Копируем файлы requirements.txt в рабочую директорию
+COPY requirements.txt /app/
+
+# Устанавливаем зависимости из requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Копируем все файлы проекта в контейнер
+COPY . /app/
 
-COPY . .
-
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+# Открываем порт, который будет использовать Gunicorn (например, 8000)
 EXPOSE 8000
 
-CMD ["uvicorn", "auth_service.asgi:application", "--host", "0.0.0.0", "--port", "8000"]
+# Указываем команду для запуска Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "auth_service.wsgi:application"]
