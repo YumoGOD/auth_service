@@ -31,8 +31,7 @@ jobs:
           DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
         run: |
           sshpass -p ${{ secrets.VDS_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.VDS_USER }}@${{ secrets.VDS_IP }} "
-            ls $$
-            cd . &&
+            сd /home/username/auth_service &&
             docker-compose down &&
             docker-compose up --build -d
           "
