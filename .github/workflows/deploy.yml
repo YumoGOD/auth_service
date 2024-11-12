@@ -33,6 +33,7 @@ jobs:
           DB_PORT: ${{ secrets.DB_PORT }}
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+          ZALUPA: ${{ secrets.ZALUPA }}
         run: |
           # Установка sshpass для автоматизации SSH с паролем
           sudo apt-get update && sudo apt-get install -y sshpass
