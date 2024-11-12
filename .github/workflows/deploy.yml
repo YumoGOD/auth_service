@@ -33,7 +33,6 @@ jobs:
           DB_PORT: ${{ secrets.DB_PORT }}
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
-          ZALUPA: ${{ secrets.ZALUPA }}
         run: |
           # Установка sshpass для автоматизации SSH с паролем
           sudo apt-get update && sudo apt-get install -y sshpass
@@ -41,6 +40,15 @@ jobs:
           # Выполнение команд на удаленном сервере через SSH
           sshpass -p "${{ secrets.VDS_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.VDS_USER }}@${{ secrets.VDS_IP }} "
             cd /root/apps/auth_service &&
+            # Создание .env файла с переменными окружения
+            echo \"DB_HOST=${{ secrets.DB_HOST }}\" > .env &&
+            echo \"DB_NAME=${{ secrets.DB_NAME }}\" >> .env &&
+            echo \"DB_USER=${{ secrets.DB_USER }}\" >> .env &&
+            echo \"DB_PASSWORD=${{ secrets.DB_PASSWORD }}\" >> .env &&
+            echo \"DB_PORT=${{ secrets.DB_PORT }}\" >> .env &&
+            echo \"DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}\" >> .env &&
+            echo \"DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}\" >> .env &&
+            # Обновление контейнеров
             docker-compose down &&
             docker-compose up --build -d
           "
