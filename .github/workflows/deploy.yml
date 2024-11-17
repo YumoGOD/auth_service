@@ -51,8 +51,8 @@ jobs:
             echo \"DB_PORT=${{ secrets.DB_PORT }}\" >> .env &&
             echo \"DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}\" >> .env &&
             echo \"DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}\" >> .env &&
-            echo \"CORS_ALLOW_ALL_ORIGINS: ${{ CORS_ALLOW_ALL_ORIGINS }}\" >> .env &&
-            echo \"DJANGO_ALLOWED_HOSTS: ${{ DJANGO_ALLOWED_HOSTS }}\" >> .env &&
+            echo \"CORS_ALLOW_ALL_ORIGINS=${{ CORS_ALLOW_ALL_ORIGINS }}\" >> .env &&
+            echo \"DJANGO_ALLOWED_HOSTS=${{ DJANGO_ALLOWED_HOSTS }}\" >> .env &&
             # Обновление контейнеров
             docker-compose down &&
             docker-compose up --build -d
